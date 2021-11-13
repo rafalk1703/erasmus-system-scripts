@@ -1,5 +1,5 @@
-var ssID = "14bNfNy8D7PVqyk_khZNu8-9W-motFMwuZ_UQBKReMZM";
-var formID = "1uGamlzobyIuP1nDbCjQn0-QhGkfDutj2GxA_e2wSh-k";
+var ssID = "1TvQYDU8OOCoKK6qgB8xe3YfP-h-_FfEQw7IJ2wks21g";
+var formID = "1ZiO3lG2B6LRUf48jwirTZc4i_xztSUdw0tIONlcyN_Q";
 
 var wsData = SpreadsheetApp.openById(ssID).getSheetByName("Arkusz1");
 var form = FormApp.openById(formID);
@@ -40,6 +40,13 @@ function updateForm() {
         .map(function (o) { return o[0] })
         .filter(function (o) { return o != "" });
       updateDropdownUsingTitle(titles[i], options);
+    } else if (labels[i] == 'DROPDOWN NO REQUIRED') {
+      var options = wsData
+        .getRange(3, i + 1, wsData.getLastRow() - 2, 1)
+        .getValues()
+        .map(function (o) { return o[0] })
+        .filter(function (o) { return o != "" });
+      updateDropdownNoRequiredUsingTitle(titles[i], options);
     }
   }
 
@@ -78,10 +85,24 @@ function createNewForm() {
         .map(function (o) { return o[0] })
         .filter(function (o) { return o != "" });
       addDropdownUsingTitle(titles[i], options);
+    } else if (labels[i] == 'DROPDOWN NO REQUIRED') {
+      var options = wsData
+        .getRange(3, i + 1, wsData.getLastRow() - 2, 1)
+        .getValues()
+        .map(function (o) { return o[0] })
+        .filter(function (o) { return o != "" });
+      addDropdownNoRequiredUsingTitle(titles[i], options);
     }
   }
 
 
+}
+
+function addDropdownNoRequiredUsingTitle(title, values) {
+  form.addListItem()
+    .setTitle(title)
+    .setChoiceValues(values)
+    .setRequired(false);
 }
 
 function addDropdownUsingTitle(title, values) {
@@ -168,6 +189,26 @@ function updateDropdown(id, values) {
   item.asListItem()
   .setChoiceValues(values)
   .setRequired(true);
+
+}
+
+function updateDropdownNoRequiredUsingTitle(title, values) {
+  var items = form.getItems();
+  var titles = items.map(function (item) {
+    return item.getTitle();
+  });
+  var pos = titles.indexOf(title);
+  var item = items[pos];
+  var itemID = item.getId();
+
+  updateDropdownNoRequired(itemID, values);
+}
+
+function updateDropdownNoRequired(id, values) {
+  var item = form.getItemById(id);
+  item.asListItem()
+  .setChoiceValues(values)
+  .setRequired(false);
 
 }
 
