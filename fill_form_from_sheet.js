@@ -20,8 +20,8 @@ function autoFillGoogleDocFromForm(e) {
   var rodzajCertyfikatu = e.values[15];
   var czyMiejsceUdostepnione = e.values[16];
   var umowa1 = e.values[17];
-  var umowa2 = e.values[18]==="brak" ? "" : e.values[18];
-  var umowa3 = e.values[19]==="brak" ? "" : e.values[19];
+  var umowa2 = e.values[18]==="BRAK" ? "" : e.values[18];
+  var umowa3 = e.values[19]==="BRAK" ? "" : e.values[19];
   var planowaneDatyPobytu = e.values[20];
   var rodzajWyjazdu = e.values[21];
   var czyUczestniczylWErasmus = e.values[22];
@@ -29,9 +29,10 @@ function autoFillGoogleDocFromForm(e) {
   var czyNiepelnosprawny = e.values[24];
 
   
-  var file = DriveApp.getFileById("1p9hXDqc_l58Lb1WQwf4ovStjEppOq-ddrv7py3j41qU"); 
+  var file = DriveApp.getFileById("1XkKR5dJ405C9K1LytuX_aP6crTtg5kYpgMIDIpIRGN0"); 
   
-  var folder = DriveApp.getFolderById("1BV5yqlRjcFD9Fr83zyqcw9zsj4Hzvlkd")
+  var folder = DriveApp.getFolderById("1aF2gf0B_EEp3xSFtVNRzQ4HBbt10jxGD")
+  
   var copy = file.makeCopy(nazwisko + ',' + imie, folder); 
   
   var doc = DocumentApp.openById(copy.getId()); 
@@ -60,7 +61,7 @@ function autoFillGoogleDocFromForm(e) {
   body.replaceText('{{Umowa3}}', umowa3); 
   body.replaceText('{{Planowane daty pobytu}}', planowaneDatyPobytu); 
   body.replaceText('{{Rodzaj wyjazdu}}', rodzajWyjazdu); 
-  body.replaceText('{{Czy uczesticzył}}', czyUczestniczylWErasmus);
+  body.replaceText('{{Czy uczestniczył}}', czyUczestniczylWErasmus);
   body.replaceText('{{Czy otrzymuje stypendium}}', czyOtrzymujeStupendium); 
   body.replaceText('{{Czy student niepełnosprawny}}', czyNiepelnosprawny);  
 
@@ -68,9 +69,8 @@ function autoFillGoogleDocFromForm(e) {
   doc.saveAndClose();
   var pdfDoc = doc.getAs('application/pdf'); 
 
-  // TODO zmienić adres maila 
   var body = "Formularz do odesłania plików: https://docs.google.com/forms/d/e/1FAIpQLSergiCLyjNHwDM7zS0pykXzxj6OlUGlryynTmrrHBBje9oyeQ/viewform?usp=sf_link"
-  GmailApp.sendEmail("rafalk1703@gmail.com", "Rekrutacja Erasmus", body, {
+  GmailApp.sendEmail(mail, "Rekrutacja Erasmus", body, {
     attachments: [pdfDoc.getAs(MimeType.PDF)], 
     });
 }
